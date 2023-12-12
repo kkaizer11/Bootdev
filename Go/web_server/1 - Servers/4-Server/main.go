@@ -5,21 +5,6 @@ import (
 	"net/http"
 )
 
-func main() {
-	const port = "8080"
-
-	mux := http.NewServeMux()
-	corsMux := middlewareCors(mux)
-
-	srv := &http.Server{
-		Addr:    ":" + port,
-		Handler: corsMux,
-	}
-
-	log.Printf("Serving on port: %s\n", port)
-	log.Fatal(srv.ListenAndServe())
-}
-
 func middlewareCors(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -31,4 +16,18 @@ func middlewareCors(next http.Handler) http.Handler {
 		}
 		next.ServeHTTP(w, r)
 	})
+} // funcão copiada do exercício mas deve ser comrpeendida
+
+func main() {
+	const port = "8081"
+
+	mux := http.NewServeMux()
+	cors := middlewareCors(mux)
+
+	server := http.Server{
+		Addr:    ":" + port,
+		Handler: cors,
+	}
+	log.Printf("Servidor rodando na porta: %s\n", port)
+	log.Fatal(server.ListenAndServe())
 }
